@@ -1,51 +1,62 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="flex flex-col gap-4 mb-6">
-    <input
-      v-model="newTaskTitle"
-      type="text"
-      placeholder="Enter a task..."
-      class="p-2 border rounded"
-      required
-    />
-    <input
-      v-model="newTaskDate"
-      type="date"
-      class="p-2 border rounded"
-      required
-    />
+  <form @submit.prevent="handleSubmit" class="space-y-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium">Title</label>
+      <input
+        v-model="title"
+        type="text"
+        placeholder="Task title"
+        class="w-full px-3 py-2 border rounded"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Date</label>
+      <input
+        v-model="date"
+        type="date"
+        class="w-full px-3 py-2 border rounded"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium">Description</label>
+      <textarea
+        v-model="description"
+        placeholder="Optional description"
+        class="w-full px-3 py-2 border rounded"
+      ></textarea>
+    </div>
+
     <button
       type="submit"
-      class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition"
+      class="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
     >
       Add Task
     </button>
   </form>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
-import type { Task } from '../types/task';
+import useTasks from '../composables/useTask';
 
-const emit = defineEmits<{ (evt: 'add-task', task: Task): void }>();
+const { addTask } = useTasks();
 
-const newTaskTitle = ref('');
-const newTaskDate = ref('');
+// Reactive form inputs
+const title = ref('');
+const date = ref('');
+const description = ref('');
 
-// Generate a unique ID using timestamp
 const handleSubmit = (): void => {
-  if (!newTaskTitle.value || !newTaskDate.value) return;
+  if (!title.value || !date.value) {
+    alert('Title and date are required');
+    return;
+  }
 
-  const newTask: Task = {
-    id: Date.now(),
-    title: newTaskTitle.value,
-    date: newTaskDate.value,
-    completed: false,
-  };
-
-  emit('add-task', newTask);
-
-  // Clear the input fields
-  newTaskTitle.value = '';
-  newTaskDate.value = '';
+  addTask(title.value, date.value, description.value);
+  title.value = '';
+  date.value = '';
+  description.value = '';
 };
 </script>
