@@ -6,7 +6,7 @@ const tasks = ref<Task[]>([]);
 // Generate unique IDs for tasks
 let taskId = 1;
 
-const useTasks = () => {
+export const useTasks = () => {
   // Add task
   const addTask = (title: string, date: string, description?: string): void => {
     const newTask: Task = {
@@ -40,5 +40,3 @@ const useTasks = () => {
     getTasksForDate,
   };
 };
-
-export default useTasks;

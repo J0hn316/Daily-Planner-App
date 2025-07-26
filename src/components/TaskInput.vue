@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import useTasks from '../composables/useTask';
+import { useTasks } from '../composables/useTasks';
 
 const { addTask } = useTasks();
 
