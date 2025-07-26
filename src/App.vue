@@ -26,12 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { Task } from './types/task';
-import PlannerForm from './components/PlannerForm.vue';
 import TaskList from './components/TaskList.vue';
+import PlannerForm from './components/PlannerForm.vue';
+import type { Task } from './types/task';
+import { useLocalStorage } from './composables/useLocalStorage';
 
-const tasks = ref<Task[]>([]);
+const tasks = useLocalStorage<Task[]>('tasks', []);
 
 // Add new task
 const addTask = (task: Task) => {
