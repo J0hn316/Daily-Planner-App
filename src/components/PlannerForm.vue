@@ -40,9 +40,11 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { useTasks } from '../composables/useTasks';
+import type { Task } from '../types/task';
 
-const { addTask } = useTasks();
+const emit = defineEmits<{
+  (e: 'add-task', task: Task): void;
+}>();
 
 // Reactive form inputs
 const title = ref('');
@@ -55,10 +57,16 @@ const handleSubmit = (): void => {
     return;
   }
 
-  // Add task to the tasks array
-  addTask(title.value, date.value, description.value);
+  const newTask: Task = {
+    id: Date.now(),
+    title: title.value,
+    date: date.value,
+    description: description.value,
+    completed: false,
+  };
 
-  // Reset form inputs
+  emit('add-task', newTask);
+
   title.value = '';
   date.value = '';
   description.value = '';
