@@ -11,18 +11,6 @@
         class="w-full border px-3 py-2 rounded"
       />
     </div>
-
-    <div>
-      <label class="block font-semibold mb-1">Description</label>
-      <textarea
-        v-model="description"
-        class="w-full border px-3 py-2 rounded"
-        rows="3"
-        placeholder="Optional notes..."
-      >
-      </textarea>
-    </div>
-
     <div>
       <label class="block font-semibold mb-1">Date</label>
       <input
@@ -32,6 +20,16 @@
         required
       />
     </div>
+    <div>
+      <label class="block font-semibold mb-1">Description</label>
+      <textarea
+        v-model="description"
+        class="w-full border px-3 py-2 rounded"
+        rows="3"
+        placeholder="Optional description..."
+      >
+      </textarea>
+    </div>
     <button
       type="submit"
       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
@@ -40,30 +38,29 @@
     </button>
   </form>
 </template>
-<script setup lang="ts">
-import { ref, defineEmits } from 'vue';
-import type { Task } from '../types/task';
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { useTasks } from '../composables/useTasks';
 
-const emit = defineEmits<{ (event: 'add-task', task: Task): void }>();
+const { addTask } = useTasks();
 
+// Reactive form inputs
 const title = ref('');
-const description = ref('');
 const date = ref('');
+const description = ref('');
 
 const handleSubmit = (): void => {
-  const task: Task = {
-    id: Date.now(),
-    title: title.value,
-    description: description.value || undefined,
-    date: date.value,
-    completed: false,
-  };
+  if (!title.value || !date.value) {
+    alert('Title and date are required');
+    return;
+  }
 
-  emit('add-task', task);
+  // Add task to the tasks array
+  addTask(title.value, date.value, description.value);
 
-  // clear form
+  // Reset form inputs
   title.value = '';
-  description.value = '';
   date.value = '';
+  description.value = '';
 };
 </script>
